@@ -34,7 +34,7 @@ class Function_x2xmlTest extends PHPUnit_Framework_TestCase {
 		);
 
         $this->assertEquals(
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<response>\n\t<fruit>banana</fruit>\n</response>\n",
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n\t<fruit>banana</fruit>\n</root>\n",
                 x2xml($array)
         );
     }
@@ -45,7 +45,7 @@ class Function_x2xmlTest extends PHPUnit_Framework_TestCase {
 			'false' => false
 		);
         $this->assertEquals(
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<response>\n\t<true>true</true>\n\t<false>false</false>\n</response>\n",
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n\t<true>true</true>\n\t<false>false</false>\n</root>\n",
                 x2xml($array)
         );
     }
@@ -58,7 +58,7 @@ class Function_x2xmlTest extends PHPUnit_Framework_TestCase {
 			'minusten' => -10
 		);
         $this->assertEquals(
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<response>\n\t<zero>0</zero>\n\t<one>1</one>\n\t<onedotfive>1.5</onedotfive>\n\t<minusten>-10</minusten>\n</response>\n",
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n\t<zero>0</zero>\n\t<one>1</one>\n\t<onedotfive>1.5</onedotfive>\n\t<minusten>-10</minusten>\n</root>\n",
                 x2xml($array)
         );
     }
@@ -70,9 +70,65 @@ class Function_x2xmlTest extends PHPUnit_Framework_TestCase {
 		);
 
 		$this->assertEquals(
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<response>\n\t<null/>\n\t<void/>\n</response>\n",
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n\t<null/>\n\t<void/>\n</root>\n",
                 x2xml($array)
         );
 	}
-	
+
+	public function testSubArray(){
+		$array = array(
+			'fruits' => array('banana', 'apple'),
+			'car' => array('color' => 'red', 'dors' => 2)
+		);
+
+		$this->assertEquals(
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n\t<fruits>\n\t\t<item>banana</item>\n\t\t<item>apple</item>\n\t</fruits>\n\t<car>\n\t\t<color>red</color>\n\t\t<dors>2</dors>\n\t</car>\n</root>\n",
+                x2xml($array)
+        );
+	}
+
+	public function testObject(){
+
+		$obj = new stdClass();
+		$obj->name = 'Carlos';
+
+		$this->assertEquals(
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n\t<name>Carlos</name>\n</root>\n",
+				x2xml($obj)
+		);
+
+	}
+
+	public function testObjectWithArray(){
+		$obj = new stdClass();
+		$obj->name = array('first' => 'Carlos', 'last' => 'Ferrari');
+
+		$this->assertEquals(
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n\t<name>\n\t\t<first>Carlos</first>\n\t\t<last>Ferrari</last>\n\t</name>\n</root>\n",
+				x2xml($obj)
+		);
+	}
+
+	public function testObjectWithObject(){
+		$obj = new stdClass();
+		$name = new stdClass();
+		$name->first = 'Carlos';
+		$name->last = 'Ferrari';
+		$obj->name = $name;
+		$this->assertEquals(
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n\t<name>\n\t\t<first>Carlos</first>\n\t\t<last>Ferrari</last>\n\t</name>\n</root>\n",
+				x2xml($obj)
+		);
+	}
+
+	public function testSpecialChars(){
+		$obj = new stdClass();
+		$obj->name = 'Carlos André Ferrari';
+
+		$this->assertEquals(
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n\t<name><![CDATA[Carlos André Ferrari]]></name>\n</root>\n",
+				x2xml($obj)
+		);
+	}
+
 }

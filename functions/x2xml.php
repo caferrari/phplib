@@ -2,15 +2,15 @@
 /** Return the XML code from an Array or Object
  * @author Carlos André Ferrari <carlos@ferrari.eti.br>
  * @param mixed $array
- * @param String $conteiner
+ * @param String $container
  * @param Boolean $beginning
  * @param Integer $ident
  * @return String
  */
-function x2xml($array, $conteiner='response', $beginning=true, $ident=0){
+function x2xml($array, $container='root', $beginning=true, $ident=0){
 	if (is_object($array)) $array = (array)$array;
 	$output = ($beginning) ? '<'.'?'.'xml version="1.0" encoding="UTF-8"'.'?'.'>' . PHP_EOL : '';
-	$output .= str_repeat("\t", $ident) . '<' . $conteiner . '>' . PHP_EOL;
+	$output .= str_repeat("\t", $ident) . '<' . $container . '>' . PHP_EOL;
 	foreach ($array as $k => $v){
 		if (!preg_match('@^[a-z0-9A-Z]@', $k)) continue;
 		if (preg_match('@^[0-9]@', $k)) $k = 'item';
@@ -24,6 +24,6 @@ function x2xml($array, $conteiner='response', $beginning=true, $ident=0){
 				str_repeat("\t", $ident+1) . '<' . $k . '>' . $v . '</' . $k . '>' . PHP_EOL;
 		}
 	}
-	$output .= str_repeat("\t", $ident) . '</' . $conteiner . '>' . PHP_EOL;
+	$output .= str_repeat("\t", $ident) . '</' . $container . '>' . PHP_EOL;
 	return $output;
 }
