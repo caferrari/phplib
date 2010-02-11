@@ -1,0 +1,3 @@
+== My code library
+
+enjoy, and fork to help ;)
