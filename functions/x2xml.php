@@ -18,7 +18,7 @@ function x2xml($array, $container='root', $beginning=true, $ident=0){
 			$output .= x2xml($v, $k, false, $ident+1);
 		else{
 			if (!preg_match('@^[0-9a-zA-Z\-_\ \.\:\,\=\/]*$@', $v)) $v = '<![CDATA[' . $v . ']]>';
-			if (gettype($v) == 'boolean') $v = $v ? 'true' : 'false';
+			if (is_bool($v)) $v = $v ? 'true' : 'false';
 			$output .= ($v==='' || $v===null) ?
 				str_repeat("\t", $ident+1) . '<' . $k . '/>' . PHP_EOL :
 				str_repeat("\t", $ident+1) . '<' . $k . '>' . $v . '</' . $k . '>' . PHP_EOL;
